@@ -18,8 +18,14 @@ filtroEventos = {'like':0, 'comment':0}  # acumulacion de eventos segun su tipo
 
 def inicializarTablaEventos():
 	
-	return {'like':1 , 'comment':2, 'likecomment':3}
+	return {'like':1 , 'comment':2, 'hashtag':3}
 
+def hayEventosEn(filtroEventos):
+	
+	for x in filtroEventos:
+		if (filtroEventos[x] > 0):
+			return True
+	return False
 
 #Mapper
 #Thread que esta corriendo continuamente y mapea acciones al Controlador
@@ -37,7 +43,7 @@ class Mapper(threading.Thread):
 		
 		while(True):
 			
-			if len(filtroEventos) > 0:  # ver que poner, siempre es True
+			if (hayEventosEn(filtroEventos)) :  # solo entra SI HAY CANTIDAD distinta de cero
 				
 				listaEventos = filtroEventos.items() # lista DE TUPLAS con (clave, valor)
 				
@@ -45,9 +51,15 @@ class Mapper(threading.Thread):
 				
 				if self.controlador.isIdle():
 					print "[Mensaje del Mapper]: El controlador ESTA disponible :)"
-							
+					
+					while (listaEventos[cont][1] == 0): #no infinito porque el if principal asegura que hay uno != 0
+						cont+=1
+						if cont >= len(listaEventos):
+							cont = 0 
+						
 					evento = listaEventos[cont][0] #evento es el nombre del evento a enviar
 					efectoAEnviar = tablaEventos[evento] #efectoAEnviar es el NUMERO designado para el evento
+					
 					self.controlador.hacerEfecto(efectoAEnviar)
 					
 					filtroEventos[evento] = 0 # reinicio contador de evento enviado
