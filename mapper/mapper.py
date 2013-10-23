@@ -117,7 +117,7 @@ class Rest(threading.Thread):
 						
 			return 'true';
 			
-			app.run()
+		app.run()
 
 mapper  = Mapper();
 rest    = Rest();
