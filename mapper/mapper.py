@@ -27,9 +27,9 @@ class Mapper(threading.Thread):
 			return 2
 		if evento == 'hashtag':
 			return 3
-		if evento == 'mention
+		if evento == 'mention':
 			return 4
-		if evento == 'share'
+		if evento == 'share':
 			return 5
 		return None
 		
