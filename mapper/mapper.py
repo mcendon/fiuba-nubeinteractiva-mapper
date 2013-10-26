@@ -1,18 +1,7 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, \
 render_template, flash
-import threading, time, signal, sys, random
+import threading, time, controlador
 
-#Controlador
-class Controlador():
-	def isIdle(self):
-		return bool(random.randint(0,1))
-	
-	def hacerEfecto(self,idEfecto):
-		if idEfecto != None:
-			print "[Mensaje del Controlador]: Despache el efecto Id ",idEfecto," a la nube" 
-		else:
-			print "No hay definido un mapeo para el evento solicitado"
-                
 filtroEventos = {} 
 
 #Mapper
@@ -20,7 +9,7 @@ filtroEventos = {}
 class Mapper(threading.Thread):
 	def __init__(self):
 		threading.Thread.__init__(self)
-		self.controlador = Controlador()
+		self.controlador = controlador.Controlador()
 		
 	def calcularEfecto(self, evento, cantidad):
 		if evento == 'post-likes':
