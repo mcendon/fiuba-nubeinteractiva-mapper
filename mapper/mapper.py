@@ -9,7 +9,9 @@ class Controlador():
 	
 	def hacerEfecto(self,idEfecto):
 		if idEfecto != None:
-			print("[Mensaje del Controlador]: Despache el efecto Id ", idEfecto ," a la nube")
+			print "[Mensaje del Controlador]: Despache el efecto Id ",idEfecto," a la nube" 
+		else:
+			print "No hay definido un mapeo para el evento solicitado"
                 
 filtroEventos = {} 
 
@@ -21,16 +23,24 @@ class Mapper(threading.Thread):
 		self.controlador = Controlador()
 		
 	def calcularEfecto(self, evento, cantidad):
-		if evento == 'like':
+		if evento == 'post-likes':
 			return 1
-		if evento == 'comment':
+		if evento == 'post-comments':
 			return 2
-		if evento == 'hashtag':
+		if evento == 'post-shares':
 			return 3
-		if evento == 'mention':
+		if evento == 'site-like':
 			return 4
 		if evento == 'share':
 			return 5
+			
+		#Twitter: La cantidad siempre sera 1
+		if evento == 'term':
+			return 6
+		if evento == 'hashtag':
+			return 7
+		if evento == 'mention':
+			return 8
 		return None
 		
 	def hayEventosEn(self, filtroEventos):
@@ -47,16 +57,15 @@ class Mapper(threading.Thread):
 				print "[Mensaje del Mapper]: Tengo notificaciones para procesar"
 				
 				for (evento,cantidad) in filtroEventos.items():
-					if self.controlador.isIdle():
-						print "[Mensaje del Mapper]: El controlador ESTA disponible :)"
-						efectoAEnviar = self.calcularEfecto( evento, cantidad );
-						self.controlador.hacerEfecto(efectoAEnviar)
-						filtroEventos[evento] = 0
-					else:
-						print "[Mensaje del Mapper]: El controlador no esta disponible :("
-			else:
-				print "[Mensaje del Mapper]: Durmiendo... zzzzzZzzZzz"
-					
+					if cantidad > 0:
+						if self.controlador.isIdle():
+							print "[Mensaje del Mapper]: El controlador ESTA disponible :)"
+							efectoAEnviar = self.calcularEfecto( evento, cantidad );
+							self.controlador.hacerEfecto(efectoAEnviar)
+							filtroEventos[evento] = 0
+						else:
+							print "[Mensaje del Mapper]: El controlador no esta disponible :("
+						
 			time.sleep(1)
 
 #Rest
