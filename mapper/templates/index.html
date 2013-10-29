@@ -2,9 +2,123 @@
 <html>
 	<head>
 		<title>Mapper - Nube Interactiva</title>
+		<script>
+		
+			// Configure the events that can be simulated
+			var events_array = [
+						{
+							"social_network":"facebook",
+							"event":"post-likes",
+							"count_selector_available":true
+						},
+						{
+							"social_network":"facebook",
+							"event":"post-comments",
+							"count_selector_available":true
+						},
+						{
+							"social_network":"facebook",
+							"event":"post-shares",
+							"count_selector_available":true
+						},
+						{
+							"social_network":"facebook",
+							"event":"site-like",
+							"count_selector_available":true
+						},
+						{
+							"social_network":"facebook",
+							"event":"share",
+							"count_selector_available":true
+						},
+						{
+							"social_network":"twitter",
+							"event":"term",
+							"count_selector_available":false
+						},
+						{
+							"social_network":"twitter",
+							"event":"hashtag",
+							"count_selector_available":false
+						},
+						{
+							"social_network":"twitter",
+							"event":"mention",
+							"count_selector_available":false
+						}
+					];
+			
+			// Update the contents of the load_result_message_container based on the body of the page loaded in the iframe
+			function update_result() {
+				var iFrame =  document.getElementById('loader_iframe');
+				var iFrameBody;
+				if ( iFrame.contentDocument ) { // FF
+					iFrameBody = iFrame.contentDocument.getElementsByTagName('body')[0];
+				}
+				else if ( iFrame.contentWindow ) { // IE
+					iFrameBody = iFrame.contentWindow.document.getElementsByTagName('body')[0];
+				}
+				
+				var result_message = '';
+				if (iFrameBody.innerHTML == 'true') {
+					result_message = 'Mensaje enviado al mapper!';
+				} else if (iFrameBody.innerHTML != '') {
+					result_message = 'ERROR - Respuesta del mapper: ' + iFrameBody.innerText;
+				}
+				
+				document.getElementById('load_result_message_container').innerHTML = result_message;
+			}
+			
+			function send_event(event_index) {
+				// Clear the result message
+				document.getElementById('load_result_message_container').innerHTML = '';
+				
+				var count = 1;
+				// If the event count is editable, load it from the corresponding input
+				if (events_array[event_index].count_selector_available) {
+					count = document.getElementById('count_selector_' + event_index).value;
+				}
+				
+				// Load the URL in the iFrame
+				document.getElementById('loader_iframe').src = '/' + events_array[event_index].social_network + '/' + events_array[event_index].event + '/' + count;
+			}
+			
+			// Generates HTML content representing the links to the events that can be simulated
+			function generate_links() {
+					var index = 0;
+					var linksHTML = '';
+					
+					for (index = 0; index < events_array.length; ++index) {
+						var social_network = events_array[index].social_network;
+						var event = events_array[index].event;
+						var count_selector_available = events_array[index].count_selector_available;
+						linksHTML += '<br/><a href="#" onclick="send_event(' + index + ');">' + social_network + '/' + event + ((count_selector_available)?'/':'/1') + '</a>';
+						if (count_selector_available) {
+							linksHTML += '<input id="count_selector_' + index + '" type="number" value="1" size="2" autocomplete="off" min="1" onkeyup="check_input(this);"/>';
+						}
+					}
+		
+					document.getElementById('links_container').innerHTML=linksHTML;
+			}
+			
+			// Checks that the input contains numbers only
+			function check_input(input) {
+				input.value = input.value.replace(/[^0-9\.]/g,'');
+				if (input.value == '') {
+					input.value = '1';
+				}
+			}
+		</script>
 	</head>
 	<body>
 		<h1>Nube Interactiva Mapper</h1>
-		<img width="400" height="400" src="static/nube_mapper.jpg" />
+		<h2>Simular evento:</h2>
+		<div id="links_container"></div>
+		<br/>
+		<div id="load_result_message_container"></div>
+		<script>
+			generate_links();
+		</script>
+		<iframe id="loader_iframe" name="loader_iframe" onload="update_result();" width="1" height="1" frameborder="0" src="about:blank">Lo sentimos. Tu navegador no soporta iframes.</iframe>
 	</body>
 </html>
