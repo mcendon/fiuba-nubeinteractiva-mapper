@@ -47,7 +47,7 @@
 							"count_selector_available":false
 						}
 					];
-			
+					
 			// Update the contents of the load_result_message_container based on the body of the page loaded in the iframe
 			function update_result() {
 				var iFrame =  document.getElementById('loader_iframe');
@@ -108,12 +108,45 @@
 					input.value = '1';
 				}
 			}
+			
+			//Send random event from events array
+			var send_random_event = function()
+			{
+				var index = Math.floor(Math.random()*events_array.length+1);
+				send_event(index);
+			}
+			
+			var interval = null;
+			//Begin sending automatic events
+			var auto_begin = function()
+			{
+				var time = parseInt(document.getElementById("auto-time").value);
+				interval = setInterval("send_random_event()", time*1000);
+				document.getElementById("auto-stop").removeAttribute("disabled");
+				document.getElementById("auto-begin").setAttribute("disabled", "disabled");
+			}
+			
+			//Stop sending automatic events
+			var auto_stop = function()
+			{
+				if (interval)
+				{
+					clearInterval(interval);
+					document.getElementById("auto-begin").removeAttribute("disabled");
+					document.getElementById("auto-stop").setAttribute("disabled", "disabled");
+				}
+			}
+			
 		</script>
 	</head>
 	<body>
 		<h1>Nube Interactiva Mapper</h1>
 		<h2>Simular evento:</h2>
 		<div id="links_container"></div>
+		<h2>Automatizar evento</h2>
+		Frecuencia (segundos): <input type="text" id="auto-time" value="30" /><br />
+		<button id="auto-begin" onclick="auto_begin()">Comenzar</button>
+		<button id="auto-stop" onclick="auto_stop()">Detener</button>
 		<br/>
 		<div id="load_result_message_container"></div>
 		<script>
