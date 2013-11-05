@@ -1,6 +1,6 @@
 from flask import Flask, request, session, g, redirect, url_for, abort, \
 render_template, flash
-import threading, time, controlador
+import threading, time, controlador,random
 
 filtroEventos = {} 
 
@@ -11,25 +11,25 @@ class Mapper(threading.Thread):
 		threading.Thread.__init__(self)
 		self.controlador = controlador.Controlador()
 		
-	def calcularEfecto(self, evento, cantidad):
-		if evento == 'post-likes':
+	def calcularEfecto(self, evento, cantidad):	
+		if evento == 'posts-likes':
 			return 1
-		if evento == 'post-comments':
-			return 2
-		if evento == 'post-shares':
+		if evento == 'posts-comments':
 			return 3
+		if evento == 'posts-shares':
+			return 5
 		if evento == 'site-like':
-			return 4
+			return 1
 		if evento == 'share':
 			return 5
 			
 		#Twitter: La cantidad siempre sera 1
 		if evento == 'term':
-			return 6
+			return 2
 		if evento == 'hashtag':
-			return 7
+			return 4
 		if evento == 'mention':
-			return 8
+			return 6
 		return None
 		
 	def hayEventosEn(self, filtroEventos):
