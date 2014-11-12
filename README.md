@@ -5,8 +5,9 @@ Mapper REST de la Nube Interactiva de la FIUBA usada en TEDx UBA 2013
 
 SETUP
 
-1. Setup de Python 2.7.5 http://www.python.org/download/
+1. Setup de Python 2.7.5 
 ============================
+http://www.python.org/download/
 
 2. Setup de PIP
 ============================
