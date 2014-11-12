@@ -7,6 +7,7 @@ SETUP
 
 1. Setup de Python 2.7.5 
 ============================
+
 http://www.python.org/download/
 
 2. Setup de PIP
@@ -22,9 +23,10 @@ python get-pip.py
 
 Nota 1: Lo instala en C:\Python27\Scripts (p ej en Windows) Nota 2: No olvidar agregar este directorio al path de Windows (o al de Linux) para ejecutar el comando pip desde consola
 
-3. Setup de Flask http://flask.pocoo.org/
+3. Setup de Flask 
 ============================
 
+http://flask.pocoo.org/
 pip install Flask
 
 4. Arrancar el servicio REST (Mapper)
